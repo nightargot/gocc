@@ -46,15 +46,12 @@ func defaultDir() string {
 		}
 	}
 	if path == "" {
-		log.Fatal(errors.New("can't find legalcell.bin"))
+		log.Fatal(errors.New("can't find gocc files"))
 	} else {
-		log.Println("legalcell file path:", path)
+		log.Println("gocc file path:", path)
 	}
-	if goPath, ok := os.LookupEnv("GOPATH"); ok {
-		return goPath + "/src/github.com/nightargot/gocc/"
-	} else {
-		return `/usr/local/share/gocc/`
-	}
+
+	return path
 }
 
 // Group holds a sequence of dicts
