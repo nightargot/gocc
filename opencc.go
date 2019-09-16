@@ -3,9 +3,11 @@ package gocc
 
 import (
 	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -22,8 +24,34 @@ var (
 )
 
 func defaultDir() string {
+	// 文件查找顺序；当前工作目录中->当前目录的data子目录中->gopath目录下
+	var path, file string
+	if wd, err := os.Getwd(); err != nil {
+		log.Fatal(errors.New("can't get work directory"))
+	} else {
+		path = wd + "/"
+		file = path + "config/t2s.json"
+		if _, err := os.Stat(file); os.IsNotExist(err) {
+			path = wd + "/data/gocc/"
+			file = path + "config/t2s.json"
+			if _, err = os.Stat(file); os.IsNotExist(err) {
+				if goPath := os.Getenv("GOPATH"); goPath != "" {
+					path = goPath + "/src/git.sogou-inc.com/iweb/vpa/data/gocc/"
+					file = path + "config/t2s.json"
+					if _, err = os.Stat(file); os.IsNotExist(err) {
+						path = ""
+					}
+				}
+			}
+		}
+	}
+	if path == "" {
+		log.Fatal(errors.New("can't find legalcell.bin"))
+	} else {
+		log.Println("legalcell file path:", path)
+	}
 	if goPath, ok := os.LookupEnv("GOPATH"); ok {
-		return goPath + "/src/github.com/liuzl/gocc/"
+		return goPath + "/src/github.com/nightargot/gocc/"
 	} else {
 		return `/usr/local/share/gocc/`
 	}
