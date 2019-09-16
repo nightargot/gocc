@@ -9,7 +9,6 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
-	"runtime"
 	"strings"
 
 	"github.com/liuzl/da"
@@ -23,9 +22,6 @@ var (
 )
 
 func defaultDir() string {
-	if runtime.GOOS == "windows" {
-		return `C:\gocc\`
-	}
 	if goPath, ok := os.LookupEnv("GOPATH"); ok {
 		return goPath + "/src/github.com/liuzl/gocc/"
 	} else {
